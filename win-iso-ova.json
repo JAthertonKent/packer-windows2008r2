@@ -1,0 +1,68 @@
+{
+  "variables": {
+    "provisioner": "",
+    "provisioner_version": "",
+    "iso_url": "7601.17514.101119-1850_x64fre_server_eval_en-us-GRMSXEVAL_EN_DVD.iso",
+    "iso_checksum": "beed231a34e90e1dd9a04b3afabec31d62ce3889",
+    "iso_checksum_type": "sha1",
+    "update": true,
+    "version": "0.0.1"
+  },
+  "builders": [
+    {
+      "vm_name": "win2008r2-standard",
+      "type": "virtualbox-iso",
+      "guest_os_type": "Windows2008_64",
+      "iso_url": "{{ user `iso_url` }}",
+      "iso_checksum": "{{ user `iso_checksum` }}",
+      "floppy_files": [
+        "floppy/win2008r2-standard/Autounattend.xml",
+        "floppy/00-run-all-scripts.cmd",
+        "floppy/install-winrm.cmd",
+        "floppy/powerconfig.bat",
+        "floppy/01-install-wget.cmd",
+        "floppy/_download.cmd",
+        "floppy/_packer_config.cmd",
+        "floppy/passwordchange.bat",
+        "floppy/openssh.bat",
+        "floppy/disablewinupdate.bat",
+        "floppy/zz-start-sshd.cmd"
+      ],
+      "iso_checksum_type": "sha1",
+      "ssh_username": "vagrant",
+      "ssh_password": "vagrant",
+      "ssh_wait_timeout": "10000s",
+      "shutdown_command": "shutdown /s /t 1 /f /d p:4:1 /c 'Packer Shutdown'",
+      "disk_size": 40960,
+      "vboxmanage": [
+        ["modifyvm", "{{.Name}}", "--memory", "768"],
+        ["modifyvm", "{{.Name}}", "--cpus", "1"],
+        ["setextradata", "{{.Name}}", "VBoxInternal/CPUM/CMPXCHG16B", "1"]
+      ]
+    }
+  ],
+  "provisioners": [
+    {
+      "environment_vars": [
+      "UPDATE={{user `update`}}"
+    ],
+      "execute_command": "{{.Vars}} cmd /c C:/Windows/Temp/script.bat",
+      "remote_path": "/tmp/script.bat",
+      "scripts": [
+        "script/vagrant.bat",
+        "script/vmtool.bat",
+        "script/clean.bat",
+        "script/ultradefrag.bat",
+        "script/uninstall-7zip.bat",
+        "script/sdelete.bat"
+      ],
+      "type": "shell"
+    },
+    {
+    "inline": [
+      "rm -f /tmp/script.bat"
+    ],
+      "type": "shell"
+    }
+  ]
+}
