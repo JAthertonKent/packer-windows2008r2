@@ -1,0 +1,1 @@
+/Applications/VMware\ OVF\ Tool/ovftool --compress output-vmware-iso/win2008r2-standard.vmx win2008r2-standard.ova
