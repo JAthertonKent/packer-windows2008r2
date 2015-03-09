@@ -18,6 +18,9 @@
         "floppy/openssh.bat",
         "floppy/disablewinupdate.bat",
         "floppy/zz-start-sshd.cmd"
+      ],
+      "import_flags": [
+        "--vsys 0 --unit 9 --scusitype BusLogic"
       ]
     }
   ],
