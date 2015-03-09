@@ -1,0 +1,42 @@
+{
+  "builders": [
+    {
+      "type": "virtualbox-ovf",
+      "source_path": "win2008r2-standard.ova",
+      "ssh_username": "vagrant",
+      "ssh_password": "vagrant",
+      "ssh_wait_timeout": "10000s",
+      "shutdown_command": "shutdown /s /t 1 /f /d p:4:1 /c 'Packer Shutdown'"
+    }
+  ],
+  "provisioners": [
+    {
+      "execute_command": "{{.Vars}} cmd /c C:/Windows/Temp/script.bat",
+      "remote_path": "/tmp/script.bat",
+      "scripts": [
+        "floppy/00-run-all-scripts.cmd",
+        "floppy/install-winrm.cmd",
+        "floppy/powerconfig.bat",
+        "floppy/01-install-wget.cmd",
+        "floppy/_download.cmd",
+        "floppy/_packer_config.cmd",
+        "floppy/passwordchange.bat",
+        "floppy/openssh.bat",
+        "floppy/disablewinupdate.bat",
+        "floppy/zz-start-sshd.cmd",
+        "script/vagrant.bat",
+        "script/vmtool.bat",
+        "script/clean.bat",
+        "script/ultradefrag.bat",
+        "script/uninstall-7zip.bat"
+      ],
+      "type": "shell"
+    },
+    {
+    "inline": [
+      "rm -f /tmp/script.bat"
+    ],
+      "type": "shell"
+    }
+  ]
+}
