@@ -18,7 +18,7 @@
         "floppy/openssh.bat",
         "floppy/disablewinupdate.bat",
         "floppy/zz-start-sshd.cmd"
-      ],
+      ]
     }
   ],
   "provisioners": [
